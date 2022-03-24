@@ -1,0 +1,70 @@
+﻿<Window x:Class="TextEditor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        DataContext="{Binding EditorViewModel, Source={StaticResource Locator}}"
+        xmlns:local="clr-namespace:TextEditor" ResizeMode="CanResizeWithGrip"
+        mc:Ignorable="d" AllowsTransparency="True" WindowStyle="None"
+        Title="Текстовый редактор" MinHeight="450" MinWidth="700"
+        Height="450" Width="700">
+    <Window.Resources>
+        <ResourceDictionary Source="/Themes/Dark.xaml"/>
+    </Window.Resources>
+    <Window.InputBindings> 
+        <KeyBinding Command="{Binding PlusScaleCommand}" Modifiers="Ctrl" Key="OemPlus"/>
+        <KeyBinding Command="{Binding MinusScaleCommand}" Modifiers="Ctrl" Key="OemMinus"/>
+        <KeyBinding Command="{Binding SaveFileCommand}" Modifiers="Ctrl" Key="S"/>
+        <KeyBinding Command="{Binding OpenFileCommand}" Modifiers="Ctrl" Key="O"/>
+        <KeyBinding Command="{Binding SaveHowCommand}" Modifiers="Ctrl+Shift" Key="S"/>
+        <KeyBinding Command="{Binding CreateFileCommand}" Modifiers="Ctrl" Key="N"/>
+    </Window.InputBindings>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <DockPanel Grid.Row="0" Background="{StaticResource PrimaryColor}" Height="40"
+                   MouseDown="Drag">
+            <Viewbox Margin="12,0,0,0" Width="25" Height="25">
+                <Canvas Width="24" Height="24">
+                    <Path Fill="#fff" Data="M13,9V3.5L18.5,9M6,2C4.89,2 4,2.89 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2H6Z" />
+                </Canvas>
+            </Viewbox>
+            <TextBlock Text="{Binding FileTitle, StringFormat={}{0} - Text Editor}" Foreground="#fff" HorizontalAlignment="Left" 
+                       VerticalAlignment="Center" Margin="10,0,0,0" FontSize="15" FontWeight="Light"/>
+            <Button Style="{StaticResource CloseButton}" HorizontalAlignment="Right" Margin="0,0,4,0" Click="Close"/>
+        </DockPanel>
+
+        <Menu Grid.Row="1" Height="30" Background="{StaticResource PrimaryColor}" BorderThickness="0">
+            <MenuItem Header="Файл" Foreground="#fff" Height="30" FontSize="12" BorderThickness="0" 
+                      Style="{StaticResource PrimaryMenuItem}" Margin="0">
+                <MenuItem Style="{StaticResource PrimaryMenuItem}" Command="{Binding CreateFileCommand}" 
+                          CommandParameter="Без имени" Header="Создать" Width="230" InputGestureText="Ctrl+Shift+S"/>
+                <MenuItem Style="{StaticResource PrimaryMenuItem}" Command="{Binding OpenFileCommand}" 
+                          Header="Открыть" Width="230" InputGestureText="Ctrl+O"/>
+                <MenuItem Style="{StaticResource PrimaryMenuItem}" Header="Сохранить" Width="230"
+                          InputGestureText="Ctrl+S" Command="{Binding SaveFileCommand}"/>
+                <MenuItem Style="{StaticResource PrimaryMenuItem}" Header="Сохранить как" Width="230"
+                          InputGestureText="Ctrl+Shift+S" Command="{Binding SaveHowCommand}"/>
+                <MenuItem Style="{StaticResource PrimaryMenuItem}" Header="Выйти" Width="230"
+                          Click="Close"/>
+            </MenuItem>
+            <MenuItem BorderThickness="0" Header="Масштаб" Foreground="#fff" Height="30" FontSize="12"
+                      Style="{StaticResource PrimaryMenuItem}" Margin="0">
+                <MenuItem Header="Увеличить" Command="{Binding PlusScaleCommand}" Style="{StaticResource PrimaryMenuItem}"
+                          InputGestureText="Ctrl+плюс" Width="260"/>
+                <MenuItem Header="Уменьшить" Command="{Binding MinusScaleCommand}" Style="{StaticResource PrimaryMenuItem}"
+                          InputGestureText="Ctrl+минус" Width="260"/>
+            </MenuItem>
+        </Menu>
+
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+            <TextBox Background="{StaticResource SecondaryColor}" Foreground="#fff" BorderThickness="0" Padding="15"
+                     AcceptsReturn="True" TextWrapping="Wrap" Text="{Binding FileContent, UpdateSourceTrigger=PropertyChanged}" 
+                     FontSize="{Binding Settings.FontSize}" AcceptsTab="True"/>
+        </ScrollViewer>
+    </Grid>
+</Window>
