@@ -69,6 +69,7 @@ namespace TextEditor.ViewModels
             PlusScaleCommand = new RelayCommand(param => Settings.FontSize += 1);
             MinusScaleCommand = new RelayCommand(param => Settings.FontSize -= 1);
 
+            FileContent = string.Empty;
             FileTitle = "Без имени";
         }
 
